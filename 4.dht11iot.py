@@ -1,3 +1,4 @@
+# Importing necessary libraries
 from machine import Pin, Timer
 import network
 import time
@@ -5,20 +6,22 @@ from umqtt.robust import MQTTClient
 import sys
 import dht
 
-sensor = dht.DHT11(Pin(4))                  # DHT11 Sensor on Pin 4 of ESP32
+# Initializing the DHT11 Sensor on Pin 4 of ESP32
+sensor = dht.DHT11(Pin(4))
 
+# Setting up Wi-Fi credentials
 WIFI_SSID     = 'LAPTOP-S64KHOM5 7272'
-WIFI_PASSWORD = 'guru1234'
+WIFI_PASSWORD = 'krish1234'
 
+# Setting up MQTT credentials
 mqtt_client_id      = 'client_'+'123456789' # Just a random client ID
-
 ADAFRUIT_IO_URL     = 'io.adafruit.com' 
-ADAFRUIT_USERNAME   = "iotwsgururaj"
+ADAFRUIT_USERNAME   = "krishk"
 ADAFRUIT_IO_KEY     = "aio_BuyA09Kt7hfRix8aqfOhnJIScGxH"
-
 TEMP_FEED_ID        = 'temp'
 HUM_FEED_ID         = 'hum'
 
+# Function to connect to Wi-Fi network
 def connect_wifi():
     wifi = network.WLAN(network.STA_IF)
     wifi.active(True)
@@ -36,11 +39,11 @@ def connect_wifi():
     else:
         print('not connected')
         sys.exit()
-        
 
+# Call the connect_wifi function to initiate the Wi-Fi connection
 connect_wifi() # Connecting to WiFi Router 
 
-
+# Set up MQTT client and connect to the server
 client = MQTTClient(client_id=mqtt_client_id, server=ADAFRUIT_IO_URL, user=ADAFRUIT_USERNAME, password=ADAFRUIT_IO_KEY,ssl=False)
 try:            
     client.connect()
@@ -48,11 +51,11 @@ except Exception as e:
     print('could not connect to MQTT server {}{}')
     sys.exit()
 
-        
-temp_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{TEMP_FEED_ID}'), 'utf-8') # format - techiesms/feeds/temp
-hum_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{HUM_FEED_ID}', 'utf-8') # format - techiesms/feeds/hum   
+# Format the feed IDs for temperature and humidity
+temp_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{TEMP_FEED_ID}'), 'utf-8') 
+hum_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{HUM_FEED_ID}', 'utf-8')  
 
-
+# Function to read sensor data and publish it to the MQTT server
 def sens_data(data):
     sensor.measure()                    # Measuring 
     temp = sensor.temperature()         # getting Temp
@@ -67,8 +70,7 @@ def sens_data(data):
     print("Temp - ", str(temp))
     print("Hum - " , str(hum))
     print('Msg sent')
-    
-    
-    
+
+# Set up a timer to call the sens_data function every 5 seconds
 timer = Timer(-1)
 timer.init(period=5000, mode=Timer.PERIODIC,callback=sens_data)
