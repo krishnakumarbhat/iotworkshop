@@ -10,16 +10,8 @@ import dht
 sensor = dht.DHT11(Pin(4))
 
 # Setting up Wi-Fi credentials
-WIFI_SSID     = 'LAPTOP-S64KHOM5 7272'
-WIFI_PASSWORD = 'krish1234'
-
-# Setting up MQTT credentials
-mqtt_client_id      = 'client_'+'123456789' # Just a random client ID
-ADAFRUIT_IO_URL     = 'io.adafruit.com' 
-ADAFRUIT_USERNAME   = "krishk"
-ADAFRUIT_IO_KEY     = "aio_BuyA09Kt7hfRix8aqfOhnJIScGxH"
-TEMP_FEED_ID        = 'temp'
-HUM_FEED_ID         = 'hum'
+WIFI_SSID     = 'abc'
+WIFI_PASSWORD = 'asdf1234'
 
 # Function to connect to Wi-Fi network
 def connect_wifi():
@@ -42,18 +34,26 @@ def connect_wifi():
 
 # Call the connect_wifi function to initiate the Wi-Fi connection
 connect_wifi() # Connecting to WiFi Router 
+# Setting up MQTT credentials
+mqtt_client_id      = 'client_'+'123456789' # Just a random client ID
+ADAFRUIT_IO_URL     = 'io.adafruit.com' 
+ADAFRUIT_USERNAME   = "krishk"
+ADAFRUIT_IO_KEY     = "aio_BuyA09Kt7hfRix8aqfOhnJIScGxH"
+TEMP_FEED_ID        = 'temp'
+HUM_FEED_ID         = 'hum'
 
 # Set up MQTT client and connect to the server
 client = MQTTClient(client_id=mqtt_client_id, server=ADAFRUIT_IO_URL, user=ADAFRUIT_USERNAME, password=ADAFRUIT_IO_KEY,ssl=False)
+
 try:            
     client.connect()
 except Exception as e:
     print('could not connect to MQTT server {}{}')
     sys.exit()
 
-# Format the feed IDs for temperature and humidity
-temp_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{TEMP_FEED_ID}'), 'utf-8') 
-hum_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{HUM_FEED_ID}', 'utf-8')  
+# Format the feed IDs for temperature and humidity 
+temp_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{TEMP_FEED_ID}', 'utf-8')
+hum_feed = bytes(f'{ADAFRUIT_USERNAME}/feeds/{HUM_FEED_ID}', 'utf-8')
 
 # Function to read sensor data and publish it to the MQTT server
 def sens_data(data):
