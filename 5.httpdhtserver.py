@@ -7,8 +7,8 @@ import dht                 # Importing the dht module for DHT sensor functionali
 dht_pin = Pin(4, Pin.IN)    # Initializing pin 4 for DHT11 sensor
 dht_sensor = dht.DHT11(dht_pin) # Initializing DHT11 sensor object using the pin 4
 
-ssid = 'krish'              # Setting the SSID of the Wi-Fi network to connect
-password = 'krish1234'      # Setting the password of the Wi-Fi network to connect
+ssid = 'abc'              # Setting the SSID of the Wi-Fi network to connect
+password = 'asdf1234'      # Setting the password of the Wi-Fi network to connect
 
 wlan = network.WLAN(network.STA_IF) # Initializing the Wi-Fi interface
 wlan.active(True)           # Enabling the Wi-Fi interface
@@ -31,7 +31,8 @@ else:                       # Otherwise, Wi-Fi is connected successfully
     status = wlan.ifconfig()# Get the IP address of the Wi-Fi connection
     print( 'ip = ' + status[0] ) # Print the IP address
 
-html = """<!DOCTYPE html>                   # HTML code to be sent to the client
+# HTML code to be sent to the client
+html = """<!DOCTYPE html>                  
 <html>
 <head> <title>Pico W</title> </head>
 <body> <h1>Pico W HTTP Server</h1>
@@ -68,10 +69,15 @@ while True:                 # Infinite loop to listen for incoming connections a
 
         # Create and send response
         response = html.format(temp, humidity)
+
+        # send HTTP response headers and content to the client
         cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
         cl.send(response)
+
+        # close the connection with the client
         cl.close()
-        
+    
     except OSError as e:
+        # handle connection errors by closing the connection and printing an error message
         cl.close()
         print('connection closed')
