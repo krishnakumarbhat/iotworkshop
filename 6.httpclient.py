@@ -1,27 +1,40 @@
+import network
 import socket
 
-# Connect to the web server and request temperature and humidity readings
-addr = ('192.168.231.57', 8000)
+# Set up Wi-Fi connection
+ssid = 'abc'
+password = 'asdf1234'
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+
+# Wait for Wi-Fi connection
+while not wlan.isconnected():
+    pass
+
+# Fetch temperature and humidity data from server
+url = 'http://192.168.136.75/'
+_, _, host, path = url.split('/', 3)
+addr = socket.getaddrinfo(host, 45000)[0][-1]
 s = socket.socket()
 s.connect(addr)
-request = b'GET / HTTP/1.1\r\nHost: ' + bytes(addr[0], 'utf8') + b'\r\n\r\n'
-s.send(request)
+s.send(bytes('GET /%s HTTP/1.0\r\nHost: %s\r\n\r\n' % (path, host), 'utf8'))
 
-# Receive and decode the server response
-response = s.recv(1024).decode('utf8')
+data = ''
+while True:
+    chunk = s.recv(128)
+    if not chunk:
+        break
+    data += str(chunk, 'utf8')
 
-# Extract the temperature and humidity readings from the response
-temp_start = response.find('Temperature: ') + len('Temperature: ')
-temp_end = response.find(' C<br>')
-temp = response[temp_start:temp_end]
+# Extract temperature and humidity values from data
+temp_start = data.find('Temperature: ') + len('Temperature: ')
+temp_end = data.find(' C')
+temp = float(data[temp_start:temp_end])
+hum_start = data.find('Humidity: ') + len('Humidity: ')
+hum_end = data.find(' %')
+hum = int(data[hum_start:hum_end])
 
-hum_start = response.find('Humidity: ') + len('Humidity: ')
-hum_end = response.find(' %</p>')
-hum = response[hum_start:hum_end]
-
-# Print the temperature and humidity readings
-print('Temperature:', temp)
-print('Humidity:', hum)
-
-# Close the socket
-s.close()
+# Print temperature and humidity values
+print('Temperature:', temp, 'C')
+print('Humidity:', hum, '%')
