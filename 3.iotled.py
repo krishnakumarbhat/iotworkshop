@@ -4,7 +4,7 @@ import time
 from umqtt.robust import MQTTClient
 import sys
 
-led=Pin("LED",Pin.OUT)                          # Onboard LED on Pin 2 of ESP32
+led=Pin("LED",Pin.OUT)                          # Onboard LED of pico w
 
 WIFI_SSID     = 'guru'
 WIFI_PASSWORD = 'guru1234'
@@ -60,7 +60,7 @@ def cb(topic, msg):                             # Callback function
         led.value(1)
         
         
-toggle_feed = bytes('{:s}/feeds/{:s}'.format(ADAFRUIT_USERNAME, TOGGLE_FEED_ID), 'utf-8') # format - techiesms/feeds/relay1   
+toggle_feed = bytes('{:s}/feeds/{:s}'.format(ADAFRUIT_USERNAME, TOGGLE_FEED_ID), 'utf-8') # format of adafruit feed 
 client.set_callback(cb)      # Callback function               
 client.subscribe(toggle_feed) # Subscribing to particular topic
 
