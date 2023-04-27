@@ -9,7 +9,7 @@ i2c = I2C(0, sda=Pin(0), scl=Pin(1), freq=400000)
 # Create MPU6050 object
 imu = MPU6050(i2c)
 
-# Loop continuously to read and print data
+# Loop continuously to read and print
 while True:
     # Uncomment the following line to print the original data from the library
     # print(imu.accel.xyz,imu.gyro.xyz,imu.temperature,end='\r')
