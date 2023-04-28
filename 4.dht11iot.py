@@ -6,7 +6,7 @@ from umqtt.robust import MQTTClient
 import sys
 import dht
 
-# Initializing the DHT11 Sensor on Pin 4 of ESP32
+# Initializing the DHT11 Sensor on gpio 4 of pico w
 sensor = dht.DHT11(Pin(4))
 
 # Setting up Wi-Fi credentials
