@@ -1,18 +1,14 @@
 from sense_hat import SenseHat
 sense= SenseHat () 
 sense.clear()
-humidity = sense.get_humidity()
-print (humidity)
 
+hum = sense.get_humidity()
+temp =sense.get_temperature()
 
-from sense_hat import SenseHat 
-sense =SenseHat () 
-sense.clear()
-ptemp = sense.get_temperature_from_pressure()
-htemp =sense.get_temperature()
-temp = (ptemp+htemp)/2
+temperature = round(temp,1)
+humidity = round(hum,1)
 
-print (ptemp)
-print (htemp)
-print(temp)
-sense.show_message(str(temp) + str(humidity))
+print(temperature)
+print(humidity)
+
+sense.show_message('temperature: {str(temp)} humidity: {str(humidity)}')
